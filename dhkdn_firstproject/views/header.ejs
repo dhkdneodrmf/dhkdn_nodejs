@@ -1,0 +1,22 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light my-1">
+        <div class="container-fluid p-0">
+            <a class="navbar-brand" href="/">My Record</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto my-2 mt-xl-3 mb-xl-0">
+                    <% if ( typeof userexist == 'undefined' ) {
+                        __append(`<li class="nav-item"><strong><a class="nav-link" href="/join">회원가입</a></strong></li>
+                        <li class="nav-item"><strong><a class="nav-link" href="/login">로그인</a></strong></li>`)
+                    } else {
+                        __append(`<li class="nav-item"><strong><a class="nav-link" href="/mypg">마이페이지</a></strong></li>
+                        <li class="nav-item"><strong><a class="nav-link" href="/logout">로그아웃</a></strong></li>`)
+                    };
+                    %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

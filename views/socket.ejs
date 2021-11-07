@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script> <!--소켓연결 모듈 만든거 불러옴-->
+    <script>
+        var socket=io.connect();//소켓과 바로 연결됨
+        socket.emit("event",{name:"홍길동"});//보내면서 데이터를 송신 데이터는 한개보내는건 상관없고 여러개면 json형태로
+        //on:통신을 받는다. 수신
+        //emit:통신을 보낸다. 송신
+        socket.emit("aaa");//송신
+        socket.emit("bbb");//송신
+        socket.on("ccc",function(data){//수신 알림창
+            alert("ccc");
+        });
+        socket.on("send",function(data){
+            alert(data);
+        })
+        function go(){
+            socket.emit("a",document.getElementById("abc").value);
+        };
+    </script>
+</head>
+<body>
+    <h1>socket view 파일입니다.</h1>
+    <input type="text" id="abc">
+    <button onclick="go();">버튼</button>
+</body>
+</html>

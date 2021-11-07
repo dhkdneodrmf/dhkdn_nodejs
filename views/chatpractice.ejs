@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅연습</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js"></script> <!--소켓연결 모듈 만든거 불러옴-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <style>
+        .everymsg {
+            position: relative;
+            background-color:white;
+        }
+        .everymsg::after {
+            left: -8px;
+            top: 5px;
+            border: solid transparent;
+            content: "";
+            position: absolute;
+            border-top-color: white;
+            border-width: 10px;
+            margin-top: -3px;
+        }
+        .mymsg {
+            position: relative;
+            background-color:yellow;
+        }
+        .mymsg::after {
+            right: -8px;
+            top: 5px;
+            border: solid transparent;
+            content: "";
+            position: absolute;
+            border-top-color: yellow;
+            border-width: 10px;
+            margin-top: -3px;
+        }
+        .notice {
+            color:blue;
+            font-style: italic;
+            text-align: center;
+            background-color:rgb(182, 216, 179);
+        }/*
+        #content {
+        }*/
+        #layout {
+            background-color:rgb(216, 248, 213);
+            height: 80vh;
+            overflow-y: auto;
+        }
+        #mylist {
+            height:20vh;
+            background-color:rgb(71, 203, 255);
+        }
+        #userlist {
+            height:65vh;
+            background-color:rgb(157, 163, 255);
+            overflow-y: auto;
+        }
+        .user {
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            background-color:rgb(158, 148, 148);
+        }
+    </style>
+    <script>
+        let socket_id;
+        let myNick=prompt("입장할 닉네임을 입력하세요.","중복값 제외 입력하세요.");
+        let socket=io.connect();//소켓과 바로 연결됨
+        let now=new Date();
+        let nowTime = "<div class='align-self-end' style='font-size:5px;'>" + now.getFullYear() + "-" + (now.getMonth()+1) + "-" + now.getDate() + "<br>" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds()+"</div>";
+        socket.emit("nickinput",{nick:myNick});
+        socket.on("error",(data)=>{
+            alert(data);
+            myNick=prompt("입장할 닉네임을 입력하세요.","중복값 제외 입력하세요.");
+            socket.emit("nickinput",{nick:myNick});
+        });
+        socket.on("skcreated",(data)=>{
+            socket_id=data["socketid"];
+        });
+        socket.on("connect",function(a){
+            console.log( "server connected!");
+        });
+        socket.on( "newMsg", ( data ) => {
+            //const divcreate=document.createElement("div");
+            //let addchat=document.createTextNode("<p class='everymsg'>"+data['socketid']+"</p><p class='notice'>"+data["msg"]+"</p>");
+            //divcreate.appendChild(addchat);
+            //document.getElementById("content").appendChild(divcreate);
+            //document.getElementById("content").append( data );
+            //console.log(data["socketid"]);
+            if (myNick != data["socketid"]){
+                $("#content").append("<div class='d-flex justify-content-start m-2'><div><img src='/profile/" + data['profile'] +"' width='30vw'></div><div class='mx-1' style='max-width:100%'><p class='p-0 mb-0 fw-bold' style='font-size:12px;'>"+data['socketid']+"</p><p class='everymsg rounded-3 p-2 m-1 text-wrap'>"+data["msg"]+"</p></div>"+ nowTime +"</div>");
+                $("#layout").scrollTop($("#content").height());
+            };
+        });
+        socket.on( "userlist", ( data ) => {
+            $("#mylist").empty();
+            $("#userlist").empty();
+            //console.log(data.users);
+            for (let i=0;i<data.users.length;i++){
+                $("h1").html("모두의 채팅<span style='color:red;font-size:16px;'>(현재 " + data.users.length + "명)</span>");
+                if(data.users[i].id===socket_id){
+                    $("#mylist").append("<form action='changeprofile' method='post' enctype='multipart/form-data' id='uploadForm'><p class='user m-0' onclick='chpf(this);'><input type='file' class='d-none' name='chpf' onchange='upprofile();' accept='image'><img class='mx-2' src='/profile/" + data.users[i].profile +"' width='30vw'>"+data.users[i].name+"</p></form>");
+                    $("#mylist").css("color",data.users[i].color);
+                } else{
+                    $("#userlist").append("<p class='user m-0' onclick='dmclick(this);'><img class='mx-2' src='/profile/" + data.users[i].profile +"' width='30vw'>"+data.users[i].name+"</p>");
+                    $("#userlist").find(".user:last-child").css("color",data.users[i].color);
+                };
+            };
+        });
+        socket.on( "notice", ( data ) => {
+            $("#content").append("<p class='notice mb-1'>"+data['socketid']+data["msg"]+"</p>");
+            $("#layout").scrollTop( $("#content").height() );
+        });
+        function go(){
+            if (document.getElementById("abc").value.replace(/ /g,"")){
+                socket.emit("sendMsg",{'sender':myNick,'msg':document.getElementById("abc").value});
+                $("#content").append("<div class='text-end d-flex justify-content-end m-2'>" + nowTime + "<div class='ms-1' style='max-width:100%'><p class='p-0 mb-0 fw-bold' style='font-size:12px;'>나로부터</p><p class='mymsg rounded-3 p-2 m-1 text-wrap'>"+document.getElementById("abc").value+"</p></div></div>");
+                document.getElementById("abc").value="";
+                $("#layout").scrollTop($("#content").height());
+            };
+        };
+        function enter(){
+            if (event.key==="Enter"){
+                go();
+            };
+        };
+        function dmclick(th){
+            if (document.getElementById("abc").value.indexOf("@"+ th.innerText)==-1){
+                document.getElementById("abc").value = "@"+ th.innerText + " " + document.getElementById("abc").value;
+            };
+        };
+        function upprofile(){
+            let formData=new FormData($('#uploadForm')[0]);
+            $.ajax({
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                url: '/changeprofile',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    alert("성공");
+                },
+                error: function (e) {
+                    alert("실패");
+                }
+            });
+        };
+        function chpf(th){
+            th.firstElementChild.click();
+        };
+    </script>
+</head>
+<body>
+    <section class="container my-2">
+        <h1 class="text-center mb-3">모두의 채팅</h1>
+        <div class="row">
+            <div class="col-3 px-1">
+                <div id="mylist">
+                </div>
+                <div id="userlist" class="my-2">
+                </div>
+            </div>
+            <div class="col-9 px-1">
+                <div id="layout">
+                    <div id="content"></div>
+                </div>
+                <div class="input-group my-1">
+                    <input class="form-control" type="text" id="abc" onkeypress="enter();">
+                    <button class="btn btn-info" onclick="go();">전송</button>
+                </div>
+            </div>
+    </section>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>폼 실습</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container">
+            <form class="border p-3" action="/myfirstform" class="my-3 " method="post">
+                <legend class="form-check-label">싹 수업은 몇시에 끝날까요?</legend>
+                <fieldset class="my-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="1" id="flexCheckDefault" name="ssacend" required>
+                        <label class="form-check-label" for="flexCheckDefault">
+                        6시
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="2" id="flexCheckDefault" name="ssacend" required>
+                        <label class="form-check-label" for="flexCheckDefault">
+                        7시
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" value="3" id="flexCheckDefault" name="ssacend" required>
+                        <label class="form-check-label" for="flexCheckDefault">
+                        8시
+                        </label>
+                    </div>
+                </fieldset>
+                <div class="my-3">
+                    <label for="exampleColorInput" class="form-label">좋아하는 색상을 선택하세요.(그 색깔로 바뀜)</label>
+                    <input type="color" class="form-control form-control-color" id="exampleColorInput" value="#563d7c" title="색상을 선택하세요." name="colorchoose" required>
+                </div>
+                <div class="my-3">
+                    <label for="customRange1" class="form-label">자신의 정치성향을 선택하세요.(좌,중도,우)</label>
+                    <input type="range" class="form-range" id="customRange1" name="politic" required>
+                </div>
+                <div class="d-grid gap-2 my-3 px-3">
+                    <button class="btn btn-info">제출</button>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
+
