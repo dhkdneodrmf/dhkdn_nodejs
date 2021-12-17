@@ -5,7 +5,7 @@
 * 기본 사용 포트 8000
 * 현재 데모사이트로 모두의 채팅 프로그램 실습 사이트 http://jyr.ideadream.co.kr:8000/ 으로 접속 가능
 
-## app_chatpractice.js
+### app_chatpractice.js
 채팅 프로그램 모두의 채팅 실습 결과물
 * socket.io 모듈 설치 및 http통신모듈 연결
 * 접속 시 닉네임 설정하여 닉네임으로 입장. 입장한 사람의 수가 표시됨.
