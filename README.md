@@ -2,8 +2,8 @@
 
 * nodejs설치 후 npm 패키지 설치
 * express 모듈, ejs엔진 사용
-* 기본 사용 포트 10000
-* 현재 데모사이트로 모두의 채팅 프로그램 실습 사이트 http://jyr.ideadream.co.kr:10000/ 으로 접속 가능
+* 기본 사용 포트 8000
+* 현재 데모사이트로 모두의 채팅 프로그램 실습 사이트 http://jyr.ideadream.co.kr:8000/ 으로 접속 가능
 
 ### app_chatpractice.js
 채팅 프로그램 모두의 채팅 실습 결과물
